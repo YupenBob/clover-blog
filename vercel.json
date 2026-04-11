@@ -1,0 +1,5 @@
+{
+  "buildCommand": "~/go/bin/hugo",
+  "outputDirectory": "public",
+  "installCommand": "echo 'no install needed'"
+}
