@@ -1,4 +1,4 @@
-baseURL: 'https://blog.xsanye.cn/'
+baseURL: '/'
 languageCode: 'zh-cn'
 title: '🍀 Clover Blog'
 theme: 'PaperMod'
