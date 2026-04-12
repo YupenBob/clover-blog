@@ -1,5 +1,5 @@
 {
-  "buildCommand": "hugo",
+  "buildCommand": "rm -rf themes/* && git clone --depth 1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod && hugo",
   "outputDirectory": "public",
   "env": {
     "HUGO_VERSION": "0.160.1"
