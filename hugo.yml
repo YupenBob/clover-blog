@@ -1,7 +1,7 @@
 baseURL: 'https://blog.xsanye.cn/'
 languageCode: 'zh-cn'
 title: '🍀 Clover Blog'
-theme: 'reimu'
+theme: 'PaperMod'
 
 ########################################
 # Basic Configuration

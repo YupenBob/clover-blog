@@ -1,5 +1,8 @@
 {
-  "buildCommand": "~/go/bin/hugo",
+  "buildCommand": "hugo",
   "outputDirectory": "public",
-  "installCommand": "echo 'no install needed'"
+  "installCommand": "echo 'no install needed'",
+  "env": {
+    "HUGO_VERSION": "0.160.1"
+  }
 }
