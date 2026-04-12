@@ -32,5 +32,7 @@ jobs:
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
+          echo "Deploying to Vercel..."
           cd public
-          vercel --prod --token=$VERCEL_TOKEN --yes
+          echo $VERCEL_TOKEN | vercel --prod --token stdin --yes 2>&1 || \
+          vercel --prod --token "$VERCEL_TOKEN" --yes 2>&1
