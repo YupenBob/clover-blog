@@ -1,5 +1,5 @@
 {
-  "buildCommand": "rm -rf themes/PaperMod themes/reimu && git clone --depth 1 https://github.com/adityatelange/hugo-PaperMod.git themes/PaperMod && hugo",
+  "buildCommand": "hugo",
   "outputDirectory": "public",
   "installCommand": "echo 'no install needed'",
   "env": {
