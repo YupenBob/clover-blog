@@ -34,4 +34,4 @@ jobs:
         run: |
           echo "Deploying to Vercel..."
           cd public
-          vercel --prod --token "$VERCEL_TOKEN" --yes --project-name clover-blog 2>&1
+          vercel --prod --token "$VERCEL_TOKEN" --yes 2>&1
