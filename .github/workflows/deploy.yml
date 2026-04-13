@@ -31,6 +31,8 @@ jobs:
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: team_iiq0vtGZLQsGfQwb9kMXSrUr
+          VERCEL_PROJECT_ID: prj_b0sOEFIUDL2Uj9oupgtjMkDD86Tt
         run: |
           echo "Deploying to Vercel..."
           cd public
