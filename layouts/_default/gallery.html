@@ -1,6 +1,5 @@
 {{- define "main" }}
 <style>
-/* Masonry layout - Pinterest style */
 .gallery-grid {
   columns: 3;
   column-gap: 8px;
@@ -12,7 +11,6 @@
   margin-bottom: 8px;
   border-radius: 10px;
   cursor: pointer;
-  position: relative;
   background: #f0f0f0;
   overflow: hidden;
 }
@@ -25,117 +23,73 @@
   transform: scale(1.04);
   filter: brightness(0.9);
 }
+@media (max-width: 900px) { .gallery-grid { columns: 2; } }
+@media (max-width: 600px) { .gallery-grid { columns: 1; } }
 
-/* Responsive: tablet 2 columns, mobile 1 column */
-@media (max-width: 768px) {
-  .gallery-grid { columns: 2; }
-}
-@media (max-width: 480px) {
-  .gallery-grid { columns: 1; }
-}
-
-/* Lightbox */
 .lightbox {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.92);
+  background: rgba(0,0,0,0.93);
   z-index: 9999;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
-.lightbox.active {
-  display: flex;
-}
-.lightbox img {
+.lightbox.active { display: flex; }
+.lightbox-img {
   max-width: 90vw;
-  max-height: 75vh;
+  max-height: 72vh;
   object-fit: contain;
   border-radius: 6px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
 }
-.lightbox-caption {
-  color: #ccc;
-  margin-top: 10px;
-  font-size: 14px;
-  text-align: center;
-}
-.lightbox-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 14px;
-}
+.lightbox-caption { color: #ccc; margin-top: 10px; font-size: 14px; text-align: center; }
+.lightbox-actions { display: flex; gap: 12px; margin-top: 14px; }
 .lightbox-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 18px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  transition: opacity 0.2s, background 0.2s;
-  border: none;
-  font-family: inherit;
-}
-.lightbox-btn:hover { opacity: 0.85; }
-.lightbox-btn-view {
-  background: #6c757d;
-  color: #fff;
-}
-.lightbox-btn-download {
-  background: #0a95b5;
-  color: #fff;
-}
-.lightbox-close {
-  position: absolute;
-  top: 18px;
-  right: 24px;
-  color: #fff;
-  font-size: 32px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  line-height: 1;
-  opacity: 0.7;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 18px; border-radius: 6px; font-size: 13px; font-weight: 600;
+  cursor: pointer; text-decoration: none; border: none; font-family: inherit;
   transition: opacity 0.2s;
 }
+.lightbox-btn:hover { opacity: 0.85; }
+.lightbox-btn-view { background: #6c757d; color: #fff; }
+.lightbox-btn-download { background: #0a95b5; color: #fff; }
+.lightbox-close {
+  position: absolute; top: 18px; right: 24px;
+  color: #fff; font-size: 32px; cursor: pointer;
+  background: none; border: none; line-height: 1; opacity: 0.7;
+}
 .lightbox-close:hover { opacity: 1; }
-
-
 </style>
 
-{{- $originalsExt := dict
-  "clover-bilibili" "jpg"
-  "clover-cosplay2" "png"
-  "clover-cosplay" "png"
-  "clover-cyber" "png"
-  "clover-desire" "png"
-  "clover-eye" "png"
-  "clover-flowers" "png"
-  "clover-fullbody" "png"
-  "clover-gamer-den" "png"
-  "clover-grassslope" "png"
-  "clover-heart" "png"
-  "clover-logo" "svg"
-  "clover-pink" "png"
-  "clover-poster" "png"
-  "clover-queen" "png"
-  "clover-rainy" "png"
-  "clover-selfie-serverroom" "png"
-  "clover-server-room2" "png"
-  "clover-server-room" "png"
-  "clover-standing" "png"
-  "clover-tsundere2" "png"
-  "clover-tsundere" "png"
-  "clover-twins" "png"
-}}
-
 <section class="gallery-grid" id="gallery-grid">
-  {{- $srcDirFull := "assets/images/avatars/" }}
-  {{- range readDir $srcDirFull }}
+  {{- $srcDir := "assets/images/avatars/" }}
+  {{- $origDir := "static/images/avatars/originals/" }}
+  {{- $origExt := dict
+    "clover-bilibili" "jpg"
+    "clover-cosplay2" "png"
+    "clover-cosplay" "png"
+    "clover-cyber" "png"
+    "clover-eye" "png"
+    "clover-flowers" "png"
+    "clover-fullbody" "png"
+    "clover-gamer-den" "png"
+    "clover-grassslope" "png"
+    "clover-heart" "png"
+    "clover-logo" "svg"
+    "clover-pink" "png"
+    "clover-poster" "png"
+    "clover-queen" "png"
+    "clover-rainy" "png"
+    "clover-selfie-serverroom" "png"
+    "clover-server-room2" "png"
+    "clover-server-room" "png"
+    "clover-standing" "png"
+    "clover-tsundere2" "png"
+    "clover-tsundere" "png"
+    "clover-twins" "png"
+  }}
+  {{- range readDir $srcDir }}
     {{- if not .IsDir }}
       {{- $name := .Name }}
       {{- $ext := path.Ext $name }}
@@ -143,30 +97,32 @@
       {{- $base := cond $hasExt ($name | strings.TrimSuffix $ext) $name }}
       {{- $url := printf "/images/avatars/%s" $name }}
       {{- $origName := "" }}
+      {{- $origUrl := "" }}
       {{- if $hasExt }}
         {{- $origName = $name }}
+        {{- $origUrl = printf "/images/avatars/originals/%s" $name }}
       {{- else }}
-        {{- $origExt := index $originalsExt $base }}
-        {{- $origName = printf "%s.%s" $base $origExt }}
+        {{- $e := index $origExt $base }}
+        {{- if $e }}
+          {{- $origName = printf "%s.%s" $base $e }}
+          {{- $origUrl = printf "/images/avatars/originals/%s" $origName }}
+        {{- end }}
       {{- end }}
-      {{- $origUrl := printf "/images/avatars/originals/%s" $origName }}
   <figure class="gallery-item"
     data-src="{{ $url }}"
     data-original="{{ $origUrl }}"
-    data-orig-name="{{ $origName }}"
-    data-caption="{{ $base }}">
+    data-orig-name="{{ $origName }}">
     <img src="{{ $url }}" alt="{{ $base }}" loading="lazy" />
   </figure>
     {{- end }}
   {{- end }}
 </section>
 
-<!-- Lightbox -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
   <button class="lightbox-close" id="lightbox-close" aria-label="关闭">&times;</button>
-  <img id="lightbox-img" src="" alt="" />
+  <img class="lightbox-img" id="lightbox-img" src="" alt="" />
   <p class="lightbox-caption" id="lightbox-caption"></p>
-  <div class="lightbox-actions" id="lightbox-actions">
+  <div class="lightbox-actions">
     <a class="lightbox-btn lightbox-btn-view" id="lightbox-btn-view" href="#" target="_blank" rel="noopener">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       查看原图
@@ -180,7 +136,16 @@
 
 <script>
 (function() {
+  // Shuffle gallery on load
   var grid = document.getElementById('gallery-grid');
+  var items = Array.prototype.slice.call(grid.querySelectorAll('.gallery-item'));
+  for (var i = items.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    grid.appendChild(items[j]);
+    items[j] = items[i];
+    items[i] = grid.children[items.length - 1 - i];
+  }
+
   var lightbox = document.getElementById('lightbox');
   var lbImg = document.getElementById('lightbox-img');
   var lbCap = document.getElementById('lightbox-caption');
@@ -191,33 +156,32 @@
   grid.addEventListener('click', function(e) {
     var item = e.target.closest('.gallery-item');
     if (!item) return;
+    var origUrl = item.dataset.original || item.dataset.src;
+    var origName = item.dataset.origName || '';
     lbImg.src = item.dataset.src;
-    lbCap.textContent = item.dataset.caption;
-    lbImg.alt = item.dataset.caption;
-    var origUrl = item.dataset.original;
-    var origName = item.dataset.origName;
-    lbView.href = origUrl;
-    lbDownload.href = origUrl;
-    lbDownload.setAttribute('download', origName);
+    lbCap.textContent = item.dataset.caption || '';
+    lbImg.alt = lbCap.textContent;
+    if (origUrl) {
+      lbView.href = origUrl;
+      lbDownload.href = origUrl;
+      lbDownload.setAttribute('download', origName);
+      lbView.style.display = 'inline-flex';
+      lbDownload.style.display = 'inline-flex';
+    } else {
+      lbView.style.display = 'none';
+      lbDownload.style.display = 'none';
+    }
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
   });
 
-  function closeLightbox() {
+  function close() {
     lightbox.classList.remove('active');
-    lbImg.src = '';
-    lbView.href = '#';
-    lbDownload.href = '#';
     document.body.style.overflow = '';
   }
-
-  lbClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', function(e) {
-    if (e.target === lightbox) closeLightbox();
-  });
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeLightbox();
-  });
+  lbClose.addEventListener('click', close);
+  lightbox.addEventListener('click', function(e) { if (e.target === lightbox) close(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
 })();
 </script>
 {{- end }}
