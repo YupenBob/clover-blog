@@ -13,5 +13,14 @@ summaryLength = 30
     noClasses = false
 
 [params]
-  label = "Clover Blog"
-  label_icon = "/clover-logo.svg"
+  label = { text = "Clover Blog", icon = "/clover-logo.svg" }
+
+[menu]
+  [[menu.main]]
+    name = "工具"
+    URL = "https://tools.xsanye.cn"
+    weight = 1
+  [[menu.main]]
+    name = "关于"
+    URL = "/about"
+    weight = 2
