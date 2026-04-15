@@ -28,6 +28,7 @@
 
 .lightbox {
   display: none;
+  pointer-events: none;
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.93);
@@ -36,7 +37,7 @@
   justify-content: center;
   flex-direction: column;
 }
-.lightbox.active { display: flex; }
+.lightbox.active { display: flex; pointer-events: auto; }
 .lightbox-img {
   max-width: 90vw;
   max-height: 72vh;
@@ -98,15 +99,13 @@
       {{- $url := printf "/images/avatars/%s" $name }}
       {{- $origName := "" }}
       {{- $origUrl := "" }}
-      {{- if $hasExt }}
-        {{- $origName = $name }}
-        {{- $origUrl = printf "/images/avatars/originals/%s" $name }}
+      {{- $e := index $origExt $base }}
+      {{- if $e }}
+        {{- $origName = printf "%s.%s" $base $e }}
+        {{- $origUrl = printf "/images/avatars/originals/%s" $origName }}
       {{- else }}
-        {{- $e := index $origExt $base }}
-        {{- if $e }}
-          {{- $origName = printf "%s.%s" $base $e }}
-          {{- $origUrl = printf "/images/avatars/originals/%s" $origName }}
-        {{- end }}
+        {{- $origName = $name }}
+        {{- $origUrl = $url }}
       {{- end }}
   <figure class="gallery-item"
     data-src="{{ $url }}"
