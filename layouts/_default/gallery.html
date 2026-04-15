@@ -42,16 +42,44 @@
 }
 .lightbox img {
   max-width: 90vw;
-  max-height: 85vh;
+  max-height: 75vh;
   object-fit: contain;
   border-radius: 6px;
   box-shadow: 0 0 40px rgba(0,0,0,0.6);
 }
 .lightbox-caption {
   color: #ccc;
-  margin-top: 12px;
+  margin-top: 10px;
   font-size: 14px;
   text-align: center;
+}
+.lightbox-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+.lightbox-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s, background 0.2s;
+  border: none;
+  font-family: inherit;
+}
+.lightbox-btn:hover { opacity: 0.85; }
+.lightbox-btn-view {
+  background: #6c757d;
+  color: #fff;
+}
+.lightbox-btn-download {
+  background: #0a95b5;
+  color: #fff;
 }
 .lightbox-close {
   position: absolute;
@@ -74,14 +102,55 @@
 }
 </style>
 
+{{- $originalsExt := dict
+  "clover-bilibili" "jpg"
+  "clover-cosplay2" "png"
+  "clover-cosplay" "png"
+  "clover-cyber" "png"
+  "clover-desire" "png"
+  "clover-eye" "png"
+  "clover-flowers" "png"
+  "clover-fullbody" "png"
+  "clover-gamer-den" "png"
+  "clover-grassslope" "png"
+  "clover-heart" "png"
+  "clover-logo" "svg"
+  "clover-pink" "png"
+  "clover-poster" "png"
+  "clover-queen" "png"
+  "clover-rainy" "png"
+  "clover-selfie-serverroom" "png"
+  "clover-server-room2" "png"
+  "clover-server-room" "png"
+  "clover-standing" "png"
+  "clover-tsundere2" "png"
+  "clover-tsundere" "png"
+  "clover-twins" "png"
+}}
+
 <section class="gallery-grid" id="gallery-grid">
   {{- $srcDirFull := "assets/images/avatars/" }}
   {{- range readDir $srcDirFull }}
     {{- if not .IsDir }}
       {{- $name := .Name }}
+      {{- $ext := path.Ext $name }}
+      {{- $hasExt := ne $ext "" }}
+      {{- $base := cond $hasExt ($name | strings.TrimSuffix $ext) $name }}
       {{- $url := printf "/images/avatars/%s" $name }}
-  <figure class="gallery-item" data-src="{{ $url }}" data-caption="{{ $name }}">
-    <img src="{{ $url }}" alt="{{ $name }}" loading="lazy" />
+      {{- $origName := "" }}
+      {{- if $hasExt }}
+        {{- $origName = $name }}
+      {{- else }}
+        {{- $origExt := index $originalsExt $base }}
+        {{- $origName = printf "%s.%s" $base $origExt }}
+      {{- end }}
+      {{- $origUrl := printf "/images/avatars/originals/%s" $origName }}
+  <figure class="gallery-item"
+    data-src="{{ $url }}"
+    data-original="{{ $origUrl }}"
+    data-orig-name="{{ $origName }}"
+    data-caption="{{ $base }}">
+    <img src="{{ $url }}" alt="{{ $base }}" loading="lazy" />
   </figure>
     {{- end }}
   {{- end }}
@@ -92,6 +161,16 @@
   <button class="lightbox-close" id="lightbox-close" aria-label="关闭">&times;</button>
   <img id="lightbox-img" src="" alt="" />
   <p class="lightbox-caption" id="lightbox-caption"></p>
+  <div class="lightbox-actions" id="lightbox-actions">
+    <a class="lightbox-btn lightbox-btn-view" id="lightbox-btn-view" href="#" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      查看原图
+    </a>
+    <a class="lightbox-btn lightbox-btn-download" id="lightbox-btn-download" href="#" download>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      下载原图
+    </a>
+  </div>
 </div>
 
 <script>
@@ -101,6 +180,8 @@
   var lbImg = document.getElementById('lightbox-img');
   var lbCap = document.getElementById('lightbox-caption');
   var lbClose = document.getElementById('lightbox-close');
+  var lbView = document.getElementById('lightbox-btn-view');
+  var lbDownload = document.getElementById('lightbox-btn-download');
 
   grid.addEventListener('click', function(e) {
     var item = e.target.closest('.gallery-item');
@@ -108,6 +189,11 @@
     lbImg.src = item.dataset.src;
     lbCap.textContent = item.dataset.caption;
     lbImg.alt = item.dataset.caption;
+    var origUrl = item.dataset.original;
+    var origName = item.dataset.origName;
+    lbView.href = origUrl;
+    lbDownload.href = origUrl;
+    lbDownload.setAttribute('download', origName);
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
   });
@@ -115,6 +201,8 @@
   function closeLightbox() {
     lightbox.classList.remove('active');
     lbImg.src = '';
+    lbView.href = '#';
+    lbDownload.href = '#';
     document.body.style.overflow = '';
   }
 
