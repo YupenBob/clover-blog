@@ -1,6 +1,6 @@
 baseURL = "/"
 languageCode = "zh-cn"
-title = "🍀 Clover Blog"
+title = "Clover Blog"
 theme = "PaperMod"
 paginate = 5
 summaryLength = 30
@@ -11,3 +11,7 @@ summaryLength = 30
       unsafe = true
   [markup.highlight]
     noClasses = false
+
+[params]
+  label = "Clover Blog"
+  label_icon = "/clover-logo.svg"
