@@ -1,0 +1,132 @@
+{{- define "main" }}
+<style>
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+.gallery-item {
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  background: #f0f0f0;
+}
+.gallery-item img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+.gallery-item:hover img {
+  transform: scale(1.04);
+  filter: brightness(0.9);
+}
+
+/* Lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.lightbox.active {
+  display: flex;
+}
+.lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+.lightbox-caption {
+  color: #ccc;
+  margin-top: 12px;
+  font-size: 14px;
+  text-align: center;
+}
+.lightbox-close {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  color: #fff;
+  font-size: 32px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.lightbox-close:hover { opacity: 1; }
+
+@media (max-width: 640px) {
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .gallery-item img { height: 200px; }
+}
+</style>
+
+<section class="gallery-grid" id="gallery-grid">
+  {{- $srcDirFull := "assets/images/avatars/" }}
+  {{- range readDir $srcDirFull }}
+    {{- if not .IsDir }}
+      {{- $name := .Name }}
+      {{- $url := printf "/images/avatars/%s" $name }}
+  <figure class="gallery-item" data-src="{{ $url }}" data-caption="{{ $name }}">
+    <img src="{{ $url }}" alt="{{ $name }}" loading="lazy" />
+  </figure>
+    {{- end }}
+  {{- end }}
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lightbox-close" aria-label="关闭">&times;</button>
+  <img id="lightbox-img" src="" alt="" />
+  <p class="lightbox-caption" id="lightbox-caption"></p>
+</div>
+
+<script>
+(function() {
+  var grid = document.getElementById('gallery-grid');
+  var lightbox = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  var lbCap = document.getElementById('lightbox-caption');
+  var lbClose = document.getElementById('lightbox-close');
+
+  grid.addEventListener('click', function(e) {
+    var item = e.target.closest('.gallery-item');
+    if (!item) return;
+    lbImg.src = item.dataset.src;
+    lbCap.textContent = item.dataset.caption;
+    lbImg.alt = item.dataset.caption;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    lbImg.src = '';
+    document.body.style.overflow = '';
+  }
+
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+})();
+</script>
+{{- end }}
+
+{{- define "title" }}{{ .Title }} | {{ .Site.Title }}{{ end -}}
