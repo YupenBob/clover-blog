@@ -1,29 +1,37 @@
 {{- define "main" }}
 <style>
+/* Masonry layout - Pinterest style */
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  columns: 3;
+  column-gap: 8px;
   padding: 0;
   list-style: none;
 }
 .gallery-item {
-  overflow: hidden;
+  break-inside: avoid;
+  margin-bottom: 8px;
   border-radius: 10px;
   cursor: pointer;
   position: relative;
   background: #f0f0f0;
+  overflow: hidden;
 }
 .gallery-item img {
   width: 100%;
-  height: 280px;
-  object-fit: cover;
   display: block;
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 .gallery-item:hover img {
   transform: scale(1.04);
   filter: brightness(0.9);
+}
+
+/* Responsive: tablet 2 columns, mobile 1 column */
+@media (max-width: 768px) {
+  .gallery-grid { columns: 2; }
+}
+@media (max-width: 480px) {
+  .gallery-grid { columns: 1; }
 }
 
 /* Lightbox */
@@ -96,10 +104,7 @@
 }
 .lightbox-close:hover { opacity: 1; }
 
-@media (max-width: 640px) {
-  .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .gallery-item img { height: 200px; }
-}
+
 </style>
 
 {{- $originalsExt := dict
