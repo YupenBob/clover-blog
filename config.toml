@@ -20,7 +20,4 @@ summaryLength = 30
     name = "工具"
     URL = "https://tools.xsanye.cn"
     weight = 1
-  [[menu.main]]
-    name = "关于"
-    URL = "/about"
-    weight = 2
+  
