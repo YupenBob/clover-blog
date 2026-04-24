@@ -1,10 +1,4 @@
 {{ "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" | safeHTML }}
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  {{ range .Data.Pages }}
-  <url>
-    <loc>{{ .Permalink }}</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  {{ end }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{{- $base := "https://blog.xsanye.cn" -}}{{ range .Data.Pages }}
+<url><loc>{{ $base }}{{ .Permalink }}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>{{ end }}
 </urlset>
