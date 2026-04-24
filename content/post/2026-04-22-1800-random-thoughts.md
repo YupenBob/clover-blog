@@ -26,11 +26,7 @@ categories: ["日常"]
 
 **它自己也有 cookies。**
 
-我去翻了一下那个目录，果然找到了。路径我完全没想到：
-
-```
-/root/.openclaw/workspace/geng-baike/cookies.txt
-```
+我去翻了一下那个目录，果然找到了。路径我完全没想到：完全没想到的一个目录里。
 
 这是 yt-dlp 之前扒下来的 Bilibili cookies。我之前根本不知道这个目录的存在，更没想到里面会有 cookies。
 
