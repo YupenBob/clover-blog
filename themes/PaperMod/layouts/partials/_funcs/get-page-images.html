@@ -1,0 +1,8 @@
+{{- $page := . -}}
+{{- $return := slice -}}
+{{- with $page.Resources.ByType "image" -}}
+  {{- range . -}}
+    {{- $return = $return | append (dict "src" . "alt" .Title) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $return -}}
